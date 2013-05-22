@@ -1,0 +1,7 @@
+# This is a comment
+-> hello
+-< hello
+
+# This is an other commented line that will result +1 failure if fed to cat
+-> world
+-< What?
