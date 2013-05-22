@@ -144,7 +144,7 @@ public class CmdTester {
 		try {	// parse command line arguments
 			final JCommander parser = new JCommander(appOptions, args);
 			if (appOptions.isHelpRequested()) {
-				parser.usage(APP_NAME);
+				parser.usage();
 				return;
 			}
 		} catch (final ParameterException ex) { // No game this time
@@ -153,10 +153,15 @@ public class CmdTester {
 			return;
 		}
 		
-		
 		RunStats stats = null;
 		
 		if (appOptions.isHeadless()) {
+			final String execCommand = appOptions.getExecPath(); 
+			if (execCommand == null) {
+				System.err.println("Executable name expected. Please use --help to get help.");
+				return;
+			}
+			
 			final String logName = appOptions.getLogPath();
 			
 			if (logName != null)
