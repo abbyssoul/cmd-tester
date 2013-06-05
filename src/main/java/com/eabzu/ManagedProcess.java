@@ -15,26 +15,19 @@ public class ManagedProcess {
 		_out = new BufferedWriter(new OutputStreamWriter(_managedProc.getOutputStream()));
 	}
 
-//	public boolean test(String expect, String cmd) throws Exception {
-//		final String resp = pipe(cmd);
-//		if ( !resp.equals(expect))
-//			throw new Exception(String.format("Test failed - expected '%s', got: '%s'",
-//					expect, resp
-//					));
-//		
-//		return true;
-//	}
-
-	public String pipe(String msg) {
-
-		try {
-			_out.write(msg + "\n");
-			_out.flush();
-			return _inp.readLine();
-		} catch (Exception err) {
+	public String pipe(String msg) throws IOException {
+		_out.write(msg + "\n");
+		_out.flush();
+		
+		final StringBuilder sb = new StringBuilder();
+		sb.append(_inp.readLine());
+		Thread.yield();
+		
+		while (_inp.ready()) {
+			sb.append(_inp.readLine());
 		}
 		
-		return "";
+		return sb.toString();
 	}
 
 	private final Process 			_managedProc;

@@ -88,7 +88,13 @@ public class Script implements Iterable<ScriptNode> {
         		}
         		
         		if (line.startsWith(stopToken)) {
-        			token = line.substring(stopToken.length()).trim();
+        			token = line.substring(stopToken.length());
+        			
+        			final int comStart = token.indexOf(getSyntax().COM_START);
+        			if (comStart > 0)
+        				token = token.substring(0, comStart);
+        			
+        			token = token.trim();
         		} else {
         			throw new IOException(String.format("Syntax error[%s]: Unexpected line: '%s'", _lineNumber, line));
         		}

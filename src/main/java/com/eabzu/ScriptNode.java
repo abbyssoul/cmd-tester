@@ -4,15 +4,15 @@ public class ScriptNode {
 
 	public ScriptNode(String cmd, String resp) {
 		setCommand(cmd);
-		setResponse(resp);
+		setExpectedResponse(resp);
 	}
 	
-	public String getCommand() { return _cmd; }
-	public void setCommand(String value) { _cmd = value; }
+	public String getCommand() { return _message; }
+	public void setCommand(String value) { _message = value; }
 
-	public String getResponse() { return _resp; }
-	public void setResponse(String value) { _resp = value; }
+	public String getExpectedResponse() { return _expectedResponce; }
+	public void setExpectedResponse(String value) { _expectedResponce = value; }
 	
-	private String _cmd;
-	private String _resp;
+	private String _message;
+	private String _expectedResponce;
 }

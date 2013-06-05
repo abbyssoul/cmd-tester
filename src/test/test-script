@@ -5,3 +5,15 @@
 # This is an other commented line that will result +1 failure if fed to cat
 -> world
 -< What?
+
+# Test regexps
+-> Blah!
+-< .* # Whatever
+
+# Test regex containing escape chars
+-> What the { Blah !} and [bob] 1/2 |   
+-< .* { .* !} and [.*] 1/2 |
+
+# Test regex containing escape chars
+-> What the { Blah !} and [bob] 1/2 | 2\1  
+-< .* { .* !} and [.*] 1/2 | 2\1 # Whatever

@@ -82,7 +82,10 @@ public class CmdTester {
 			final ManagedProcess p = new ManagedProcess(execFileName);
 			
 			out.printf("# Script: '%s'\n", scriptFileName);
+			out.println();
+			
 	        final Script script = new Script(scriptFileName);
+	        final String commentStart = script.getSyntax().COM_START;
 	        for (ScriptNode test : script) {
 	        	
 	        	if (test != null) {
@@ -92,28 +95,39 @@ public class CmdTester {
 			        
 			        try {
 			        	stats.testRun++;
-			        	final String res = p.pipe(test.getCommand());
+			        	final String result = p.pipe(test.getCommand());
 			        	
-			        	if (!test.getResponse().equals(res)) {
-				        	stats.testFailed++;
-					        
-				        	out.printf("%s Test failed:\n", script.getSyntax().COM_START);
-				        	out.printf("%s\tExpected: '%s'\n", script.getSyntax().COM_START, test.getResponse());
-				        	out.printf("%s\tReceived: '%s'\n", script.getSyntax().COM_START, res);
-			        	} else {
+			        	final String expected = test.getExpectedResponse();
+			        	final String expectedRegex = expected.replace("\\", "\\\\")
+			        			.replace("|", "\\|")
+			        			.replace("{", "\\{")
+			        			.replace("}", "\\}")
+			        			.replace("[", "\\[")
+			        			.replace("]", "\\]")
+			        			;
+			        	
+			        	if ((result == null && (expected == null || expected.isEmpty())) ||
+		        			(result != null && result.matches(expectedRegex)) ) {
 			        		stats.testPassed++;
 
-			        		out.printf("%s %s\n",
-				        			script.getSyntax().RES_START,
-				        			test.getResponse());
+			        		out.printf("%s %s\n", script.getSyntax().RES_START, result);
+				        	out.printf("%s --------------\n", commentStart);
+				        	out.printf("%s Ok\n", commentStart);
+			        	} else {
+				        	stats.testFailed++;
+					        
+				        	out.printf("%s Expected: '%s'\n", commentStart, test.getExpectedResponse());
+				        	out.printf("%s Received: '%s'\n", commentStart, result);
+				        	out.printf("%s --------------\n", commentStart);
+				        	out.printf("%s Failed\n", commentStart);
 			        	}
 				        
 			        } catch (Exception ex) {
 			        	stats.testFailed++;
 				        
-			        	out.printf("%s %s\n",
-				        		script.getSyntax().COM_START,
-				        		ex.getMessage());
+			        	out.printf("%s Exception: %s\n", commentStart, ex.getMessage());
+			        	out.printf("%s --------------\n", commentStart);
+			        	out.printf("%s Failed\n", commentStart);
 			        }
 			        	
 		        	out.println();

@@ -1,0 +1,7 @@
+# Ignore eclise and tmp files
+.classpath
+.project
+.settings
+target
+*~
+
