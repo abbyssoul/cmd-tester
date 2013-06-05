@@ -7,7 +7,7 @@ This is a simple tool that can spawn a process and send commands to its
 standard input and compare response with expected.
 
 Example:
-- Given the following script 'src/test/test-script':
+- Given the following script as input 'src/test/test-script':
 	> cat src/test/test-script
 		# This is a comment
 		-> hello
@@ -22,16 +22,20 @@ start with '->' to 'cat' input and compare that it returns string
 that start with '-<'
 
 	> java -jar commandTester.jar --exec "cat" --script "src/test/test-script"
-	    # Date: Thu May 23 00:26:48 EST 2013
-	    # Exec: 'cat'
-	    # Script: 'src/test/test-script'
-	    -> hello
-	    -< hello
-	
-	    -> world
-	    # Test failed:
-	    #	Expected: What?
-	    #	Received: world
+		# Date: Thu Jun 06 01:05:44 EST 2013
+		# Exec: 'cat'
+		# Script: 'src/test/test-script'
+		
+		-> hello
+		-< hello
+		# --------------
+		# Ok
+		
+		-> world
+		# Expected: 'What?'
+		# Received: 'world'
+		# --------------
+		# Failed
 	
 	    -------------
 	    Total: 2, Ok: 1, Failed: 1
